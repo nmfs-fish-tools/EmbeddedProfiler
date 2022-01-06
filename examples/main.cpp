@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   main.cpp
  * Author: mattadmin
  *
@@ -15,10 +15,10 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
-#include "../include/Profiler.hpp"
+#include "Profiler.hpp"
 using namespace std;
 
-void DoStuff2() {
+void DoStuff1() {
     PROFILER_START_SCOPE("DoStuff2");
     double* d = new double[1000000000];
     for (size_t i = 0; i < 1000000000; i++) {
@@ -29,7 +29,7 @@ void DoStuff2() {
     PROFILER_END_SCOPE("DoStuff2");
 }
 
-void DoStuff() {
+void DoStuff2() {
     PROFILER_START_SCOPE("DoStuff");
     double* d = new double[1000000000];
     for (size_t i = 0; i < 1000000000; i++) {
@@ -40,7 +40,7 @@ void DoStuff() {
     PROFILER_END_SCOPE("DoStuff");
 }
 
-bool keep_sampling_g = true;
+std::atomic<bool> keep_sampling_g(true);
 
 void Sample() {
     while (keep_sampling_g) {
@@ -51,7 +51,7 @@ void Sample() {
 }
 
 /*
- * 
+ *
  */
 int main(int argc, char** argv) {
     PROFILER_START_APP("my application");
@@ -59,14 +59,17 @@ int main(int argc, char** argv) {
     double* d = new double[1000000000];
     PROFILER_SAMPLE_MEMORY("line 25");
     PROFILER_SAMPLE_CPU("line 26");
-    DoStuff();
+    DoStuff1();
     DoStuff2();
-    DoStuff();
-    DoStuff();
+    DoStuff1();
+    DoStuff1();
     DoStuff2();
-    DoStuff();
+    DoStuff1();
     delete[] d;
+    
     keep_sampling_g = false;
+    sampler.join();
+    
     PROFILER_END_APP("my application");
     std::cout << tools::DumpToString();
     return 0;
