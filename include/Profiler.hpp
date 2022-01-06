@@ -35,7 +35,8 @@
 #ifndef PROFILER_H
 #define PROFILER_H
 
-
+#include <thread>
+#include <condition_variable>
 
 #define PROFILE
 
@@ -215,6 +216,8 @@ typedef void *LPVOID;
 
 namespace tools {
 
+    std::mutex profiler_mutex_;
+
     class ExceptionDM {
     public:
 
@@ -261,6 +264,7 @@ namespace tools {
     }
 
     static unsigned int GetNumberOfProcessors() {
+
         int numCPU = 1;
 #if defined(DARWIN_OS)
         int mib[4];
@@ -370,6 +374,7 @@ namespace tools {
     }
 
     static double GetProcessorSpeed() {
+
         double Freq_Hz = -9999.0;
         //
         //#if defined(__i386) || defined(__i386)
@@ -517,6 +522,7 @@ namespace tools {
 #endif
 
     static double GetProcessorUsage() {
+
 #ifdef WINDOWS_OS//while (1) { ps | sort -desc cpu | select -first 30; sleep -seconds 2; cls }
 
         if (!inited) {
@@ -650,6 +656,7 @@ namespace tools {
     }
 
     static unsigned long long GetAvailableRAM() {
+
         long ram = 0;
 #ifdef DARWIN_OS
         //        int mib [] = {CTL_HW, HW_MEMSIZE};
@@ -663,7 +670,7 @@ namespace tools {
         //        return ram;
         long pages = sysconf(_SC_PHYS_PAGES);
         long page_size = sysconf(_SC_PAGE_SIZE);
-        return pages * page_size/(1024*1024*1024);
+        return pages * page_size / (1024 * 1024 * 1024);
 #endif
 
 
@@ -705,8 +712,8 @@ namespace tools {
 
     /**
      * Get memory usage in bytes.
-     * 
-     * @return 
+     *
+     * @return
      */
     static unsigned int GetCurrentMemoryUsage() {
 
@@ -903,6 +910,7 @@ namespace tools {
 #endif
 
         double EllapsedTimeMilliSeconds() {
+
             double startTime;
                     double endTime;
 
@@ -1104,14 +1112,18 @@ namespace tools {
 
             static void SampleMemory(std::string message = "NA") {
 
-        ramSample_.push_back(
+        std::lock_guard<std::mutex> gaurd(profiler_mutex_);
+
+                ramSample_.push_back(
                 MemoryDM(application_timer_.EllapsedTimeMilliSeconds(),
                 GetCurrentMemoryUsage(), message));
     }
 
     static void SampleCPU(std::string message = "NA") {
 
-        cpuSample_.push_back(
+        std::lock_guard<std::mutex> gaurd(profiler_mutex_);
+
+                cpuSample_.push_back(
                 CPUDM(application_timer_.EllapsedTimeMilliSeconds(),
                 GetProcessorUsage(), message));
     }
@@ -1130,6 +1142,7 @@ namespace tools {
     }
 
     static void ProfileFunctionStart(std::string name) {
+
         if (!application_timer_.Running()) {
             application_timer_.Start();
         }
@@ -1146,6 +1159,7 @@ namespace tools {
     }
 
     static void ProfileFunctionEnd(std::string name) {
+
         profiled_functions_it = profiled_functions.find(name);
 
         if (profiled_functions_it == profiled_functions.end()) {
@@ -1377,8 +1391,8 @@ namespace tools {
      */
     static std::string DumpToString() {
 
-//        std::cout << "Writing Profiler Results..." << std::endl;
-                std::stringstream out;
+        //        std::cout << "Writing Profiler Results..." << std::endl;
+        std::stringstream out;
                 double totalTime = 0;
 
 
@@ -1453,7 +1467,7 @@ namespace tools {
         }
         out << "\n";
 
-//                std::cout << "Profile Complete!\n";
+                //                std::cout << "Profile Complete!\n";
 
         return out.str();
     }
