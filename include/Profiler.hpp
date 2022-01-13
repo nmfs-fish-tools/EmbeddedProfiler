@@ -738,7 +738,7 @@ namespace tools {
         else {
             MEMORYSTATUS ms;
             GlobalMemoryStatus(&ms);
-            return (double) ((ms.dwTotalPhys - ms.dwAvailPhys); // / (1024.0 * 1024.0));
+            return (double) ((ms.dwTotalPhys - ms.dwAvailPhys)); // / (1024.0 * 1024.0));
         }
         /*
         lMEMORYSTATUSEX memInfo;
