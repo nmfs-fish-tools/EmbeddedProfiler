@@ -15,7 +15,7 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
-#include "Profiler.hpp"
+#include "../include/Profiler.hpp"
 using namespace std;
 
 void DoStuff1() {
