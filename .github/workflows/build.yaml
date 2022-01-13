@@ -30,13 +30,7 @@ jobs:
         cd build 
         cmake --build .
         
-    - name: Test
+    - name: Profile
       run: |
         cd build
-        ctest 
-        
-    - name: Benchmark
-      run: |
-        cd build
-        ./likelihoods_benchmark.exe
-        ./model_benchmark.exe
+        ls
