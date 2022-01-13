@@ -37,6 +37,8 @@
 
 #include <thread>
 #include <condition_variable>
+#include <atomic>
+
 
 #define PROFILE
 
