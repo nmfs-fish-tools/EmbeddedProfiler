@@ -9,5 +9,5 @@ add_executable(ProfilerExample main.cpp)
 target_include_directories(ProfilerExample PRIVATE ../include)
 
 if (UNIX)
-target_link_libraries(ProfilerExample PRIVATE lpthread)
+target_link_libraries(ProfilerExample PRIVATE pthread)
 endif()
