@@ -4,4 +4,10 @@ cmake_minimum_required(VERSION 3.10)
 project(EmbeddedProfiler)
 
 # add the executable
-add_executable(ProfilerExamples main.cpp)
+add_executable(ProfilerExample main.cpp)
+
+target_include_directories(ProfilerExample PRIVATE ../include)
+
+if (UNIX)
+target_link_libraries(ProfilerExample PRIVATE lpthread)
+endif()
