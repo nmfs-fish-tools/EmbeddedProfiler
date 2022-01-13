@@ -23,7 +23,7 @@ jobs:
 
     - name: Configure
       run: |
-        cmake -DCMAKE_CXX_FLAGS="-std=c++11 -S . -B build -G"Ninja"
+        cmake -DCMAKE_CXX_FLAGS="-std=c++11" -S . -B build -G"Ninja"
         
     - name: Build
       run: |
