@@ -33,4 +33,4 @@ jobs:
     - name: Profile
       run: |
         cd build
-        ./ProfilerExamples
+        ./ProfilerExamples*
