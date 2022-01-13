@@ -674,6 +674,12 @@ namespace tools {
         long page_size = sysconf(_SC_PAGE_SIZE);
         return pages * page_size / (1024 * 1024 * 1024);
 #endif
+           
+#ifdef LINUX_OS
+        long pages = sysconf(_SC_PHYS_PAGES);
+        long page_size = sysconf(_SC_PAGE_SIZE);
+        return pages * page_size / (1024 * 1024 * 1024);
+#endif
 
 
 #ifdef WINDOWS_OS
